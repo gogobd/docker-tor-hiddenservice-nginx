@@ -13,12 +13,15 @@ then
         exit -1
     else
         echo '[+] Generating the address with mask: '$2
-        shallot -f /tmp/key $2
-        echo '[+] '$(grep Found /tmp/key)
-        grep 'BEGIN RSA' -A 99 /tmp/key > /web/private_key
+        mkdir -p /tmp/key
+        mkp224o $2 -n 1 -d /tmp/key/
+        files=(/tmp/key/*.onion) 
+        ls ${files[0]}
+        echo '[+] '${files[0]}
+        cp -rv ${files[0]}/* /web/
     fi
 
-    address=$(grep Found /tmp/key | cut -d ':' -f 2 )
+    address=$(cat /web/hostname)
 
     echo '[+] Generating nginx configuration for site '$address
     echo 'server {' > /web/site.conf
@@ -30,7 +33,7 @@ then
 
     echo '[+] Creating www folder'
     mkdir /web/www
-    chmod 755 /web/
+    chmod 700 /web/
     chmod 755 /web/www
     echo '[+] Generating index.html template'
     echo '<html><head><title>Your very own hidden service is ready</title></head><body><h1>Well done !</h1></body></html>' > /web/www/index.html
@@ -39,14 +42,14 @@ fi
 
 if [ "$1" == "serve" ]
 then
-    if [ ! -f /web/private_key ]
+    if [ ! -f /web/hs_ed25519_secret_key ]
     then
         echo '[-] Please run this container with generate argument to initialize your web page'
         exit -1
     fi
     echo '[+] Initializing local clock'
     ntpdate -B -q 0.debian.pool.ntp.org
-    echo '[+] Starting tor'
+    echo '[+] Starting tor for '$(cat /web/hostname)
     tor -f /etc/tor/torrc &
     echo '[+] Starting nginx'
     nginx &

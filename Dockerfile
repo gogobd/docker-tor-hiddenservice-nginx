@@ -1,6 +1,4 @@
-FROM debian:jessie
-
-LABEL maintainer "opsxcq@strm.sh"
+FROM debian:bullseye
 
 # Base packages
 RUN apt-get update && \
@@ -8,19 +6,10 @@ RUN apt-get update && \
     nginx \
     tor torsocks ntpdate
 
-# Compile shallot
-ADD ./shallot /shallot
-RUN apt-get -y install \
-    build-essential \
-    libssl-dev && \
-    cd /shallot && \
-    ./configure && \
-    make && \
-    mv ./shallot /bin && \
-    cd / && \
-    rm -Rf /shallot && \
-    apt-get -y purge build-essential libssl-dev && \
-    rm -Rf /var/lib/apt/lists/*
+ADD ./mkp224o /mkp224o
+RUN cd /mkp224o \
+ && apt-get -y install gcc libsodium-dev make autoconf automake autoconf \
+ && ./autogen.sh && ./configure && make && ls -lah && cp ./mkp224o /bin
 
 # Security and permissions
 RUN useradd --system --uid 666 -M --shell /usr/sbin/nologin hidden
@@ -45,3 +34,4 @@ WORKDIR /web
 ENTRYPOINT ["/main.sh"]
 CMD ["serve"]
 
+# docker build -t tor-nginx .
