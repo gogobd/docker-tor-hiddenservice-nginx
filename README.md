@@ -21,27 +21,3 @@ Create an container named 'hiddensite' to serve your generated hidden service
 docker run -d --restart=always --name hiddensite -v $(pwd)/web:/web tor-hiddenservice-nginx 
 ```
 
-## Example
-
-Let's create a hidden service with the name beginning with strm.
-
-```sh
-docker pull tor-hiddenservice-nginx
-```
-
-Wait to the container image be downloaded. And them we can generate our site
-skeleton:
-
-```sh
-$docker run -it --rm -v $(pwd)/web:/web tor-hiddenservice-nginx generate strm
-```
-
-Now we have our skeleton generated, we can run the container with:
-
-```sh
-docker run -d --restart=always --name hiddensite \
-       -v $(pwd)/web:/web tor-hiddenservice-nginx
-```
-
-And you have the service running ! :)
-
