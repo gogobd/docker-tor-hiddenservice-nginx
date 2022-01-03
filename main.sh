@@ -56,3 +56,7 @@ then
     # Monitor logs
     sleep infinity
 fi
+
+# docker build -t tor-hiddenservice-nginx .
+# docker run -it --rm -v $(pwd)/web:/web tor-hiddenservice-nginx generate <pattern>
+# docker run -d --restart=always --name hiddensite -v $(pwd)/web:/web tor-hiddenservice-nginx
