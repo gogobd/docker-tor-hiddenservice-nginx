@@ -4,11 +4,8 @@ Easily run a hidden service inside the Tor network with this container
 
 
 Generate the skeleton configuration for you hidden service, replace <pattern>
-for your hidden service pattern name. Example, if you want to your hidden
-service contain the word 'boss', just use this word as argument. You can use
-regular expressions, like ```boss```, will generate an address wich will start
-with 'boss'. Be aware that bigger the pattern, more time it will take to
-generate it.
+for your hidden service pattern name. Example, if you want your hidden
+service to contain the word 'boss', just use this word as argument.
 
 ```sh
 docker build -t tor-hiddenservice-nginx .
